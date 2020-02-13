@@ -3,7 +3,7 @@ package com.wentao.ncov.entity.mongo;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Document("DXYArea")
 @Data
-public class DXYAreaEntity {
+public class DXYAreaEntity implements Serializable {
     private String id;
     private String provinceName;
     private String provinceShortName;

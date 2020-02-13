@@ -1,6 +1,7 @@
 package com.wentao.ncov;
 
 import com.wentao.ncov.scheduled.InitializerDataFromMongo;
+import com.wentao.ncov.util.InitializerDataForProvinceFromMongo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,8 +21,16 @@ public class InitializerDataFromMongoTest {
     @Resource
     private InitializerDataFromMongo initializerDataFromMongo;
 
+    @Resource
+    private InitializerDataForProvinceFromMongo initializerDataForProvinceFromMongo;
+
     @Test
     public void name() {
         initializerDataFromMongo.scheduledMethod();
+    }
+
+    @Test
+    public void name1() {
+        initializerDataForProvinceFromMongo.makeProvince();
     }
 }

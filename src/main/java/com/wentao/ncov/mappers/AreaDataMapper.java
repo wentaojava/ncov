@@ -1,9 +1,11 @@
 package com.wentao.ncov.mappers;
 
 import com.wentao.ncov.entity.mysql.AreaData;
+import com.wentao.ncov.entity.mysql.ProvinceData;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 @Mapper
@@ -26,6 +28,7 @@ public interface AreaDataMapper {
 
     /**
      * 批量插入数据
+     *
      * @param areaDataList
      * @return
      * @throws
@@ -34,4 +37,17 @@ public interface AreaDataMapper {
      * Gods bless me,code never with bug.
      */
     Integer insertAll(@Param("list") List<AreaData> areaDataList);
+
+    /**
+     * 根据时间获取数据
+     *
+     * @param provinceDataListForCheckDouble
+     * @param time
+     * @return
+     * @throws
+     * @author wentao
+     * @time 2020年02月13日
+     * Gods bless me,code never with bug.
+     */
+    List<AreaData> selectDataByUpdate(@Param("list") List<ProvinceData> provinceDataListForCheckDouble, @Param("date") Date time);
 }
