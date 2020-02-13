@@ -16,6 +16,7 @@ import java.util.List;
 @Document("DXYArea")
 @Data
 public class DXYAreaEntity implements Serializable {
+    private static final long serialVersionUID = 3480473307532305846L;
     private String id;
     private String provinceName;
     private String provinceShortName;

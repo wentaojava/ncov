@@ -9,8 +9,7 @@ import com.wentao.ncov.mappers.AreaDataMapper;
 import com.wentao.ncov.mappers.CityDataMapper;
 import com.wentao.ncov.mappers.ProvinceDataMapper;
 import com.wentao.ncov.util.MapStructUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -37,9 +36,8 @@ import java.util.stream.Collectors;
  */
 @Component
 @Transactional(rollbackFor = RuntimeException.class)
+@Slf4j
 public class InitializerDataFromMongo {
-
-    private static final Logger log = LoggerFactory.getLogger(InitializerDataFromMongo.class);
 
     @Resource
     private MongoTemplate mongoTemplate;

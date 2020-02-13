@@ -86,4 +86,8 @@
         location_Id, crawl_Time, country, create_Time, modify_Time
         from Province_data
     </select>
+    <select id="selectAllForGetProvince" resultType="com.wentao.ncov.vo.GetProvinceVO">
+         select id, province_Name, province_Short_Name, location_Id, country
+        from Province_data
+    </select>
 </mapper>

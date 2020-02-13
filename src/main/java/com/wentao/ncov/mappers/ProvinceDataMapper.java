@@ -1,6 +1,7 @@
 package com.wentao.ncov.mappers;
 
 import com.wentao.ncov.entity.mysql.ProvinceData;
+import com.wentao.ncov.vo.GetProvinceVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -46,4 +47,15 @@ public interface ProvinceDataMapper {
      * @mbggenerated Tue Feb 11 17:37:58 CST 2020
      */
     int updateByPrimaryKey(ProvinceData record);
+
+    /**
+     * 获取省份信息
+     *
+     * @return java.util.List.com.wentao.ncov.vo.GetProvinceVO
+     * @throws
+     * @author wentao
+     * @time 2020年02月13日
+     * Gods bless me,code never with bug.
+     */
+    List<GetProvinceVO> selectAllForGetProvince();
 }
