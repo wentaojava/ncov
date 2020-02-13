@@ -90,4 +90,9 @@
          select id, province_Name, province_Short_Name, location_Id, country
         from Province_data
     </select>
+    <select id="selectProvinceByCountry" resultType="com.wentao.ncov.entity.mysql.ProvinceData">
+         select id, country_Type, continents, province_Name, province_Short_Name, comment,
+        location_Id, crawl_Time, country, create_Time, modify_Time
+        from Province_data where country=#{country}
+    </select>
 </mapper>

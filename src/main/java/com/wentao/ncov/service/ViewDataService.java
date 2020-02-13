@@ -1,6 +1,7 @@
 package com.wentao.ncov.service;
 
 import com.wentao.ncov.util.response.RestResponse;
+import com.wentao.ncov.vo.GetDataTodayVO;
 import com.wentao.ncov.vo.GetProvinceVO;
 
 import java.util.List;
@@ -20,5 +21,16 @@ public interface ViewDataService {
      * @time 2020年02月13日
      * Gods bless me,code never with bug.
      */
-    RestResponse<List<GetProvinceVO>> getProvince();
+    public RestResponse<List<GetProvinceVO>> getProvince();
+
+    /**
+     * 获取当日确诊，疑似，治愈，死亡人数数据
+     *
+     * @return com.wentao.ncov.vo.GetProvinceVO
+     * @throws
+     * @author wentao
+     * @time 2020年02月13日
+     * Gods bless me,code never with bug.
+     */
+    public RestResponse<GetDataTodayVO> getDataToday();
 }

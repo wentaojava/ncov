@@ -2,6 +2,7 @@ package com.wentao.ncov.controller;
 
 import com.wentao.ncov.service.ViewDataService;
 import com.wentao.ncov.util.response.RestResponse;
+import com.wentao.ncov.vo.GetDataTodayVO;
 import com.wentao.ncov.vo.GetProvinceVO;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +39,21 @@ public class ViewDataController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public RestResponse<List<GetProvinceVO>> getProvince() {
         return viewDataService.getProvince();
+    }
+
+    /**
+     * 获取当日确诊，疑似，治愈，死亡人数数据
+     *
+     * @return com.wentao.ncov.vo.GetProvinceVO
+     * @throws
+     * @author wentao
+     * @time 2020年02月13日
+     * Gods bless me,code never with bug.
+     */
+    @RequestMapping(value = "/getDataToday", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public RestResponse<GetDataTodayVO> getDataToday() {
+        return viewDataService.getDataToday();
     }
 
 

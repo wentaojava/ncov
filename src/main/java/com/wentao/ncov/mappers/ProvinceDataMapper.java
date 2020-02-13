@@ -3,6 +3,7 @@ package com.wentao.ncov.mappers;
 import com.wentao.ncov.entity.mysql.ProvinceData;
 import com.wentao.ncov.vo.GetProvinceVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -58,4 +59,15 @@ public interface ProvinceDataMapper {
      * Gods bless me,code never with bug.
      */
     List<GetProvinceVO> selectAllForGetProvince();
+
+    /**
+     * 根据国家获取省份信息
+     *
+     * @return ProvinceData
+     * @throws
+     * @author wentao
+     * @time 2020年02月13日
+     * Gods bless me,code never with bug.
+     */
+    List<ProvinceData> selectProvinceByCountry(@Param("country") String string);
 }
