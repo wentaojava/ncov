@@ -27,4 +27,8 @@ TODO:<br>
 <br>
 DONE:<br>
 * 定时从mongoDB中获取当天数据存至mysql功能
--
+
+<br>
+maven打包镜像之前需要执行maven install，先把项目打成jar包
+<br>
+ docker run -itd --name ncov-0.0.1-SNAPSHOT -p 8001:8001 --restart always ncov-spring-boot:ncov
