@@ -72,8 +72,8 @@ public class InitializerDataFromMongo {
         Date startDate = null;
         Date today = null;
         try {
-            startDate = sdf.parse("2020-02-12");
-            today = sdf.parse("2020-02-13");
+            startDate = sdf.parse("2020-02-13");
+            today = sdf.parse("2020-02-14");
         } catch (ParseException e) {
             e.printStackTrace();
         }*/
@@ -183,7 +183,7 @@ public class InitializerDataFromMongo {
             }
         } else {
             //获取前一日城市数据
-            cityDataForYesterday = cityDataMapper.selectDataByLocationIdAndcreateTime(areaDataListForYesterday, c.getTime());
+            cityDataForYesterday = cityDataMapper.selectDataByLocationIdAndcreateTime(areaDataListForYesterday, calendar.getTime());
         }
 
         //存储数据

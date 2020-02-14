@@ -1,6 +1,8 @@
 package com.wentao.ncov.service;
 
+import com.wentao.ncov.bo.GetCityDataTodayByMongodbIdBO;
 import com.wentao.ncov.util.response.RestResponse;
+import com.wentao.ncov.vo.GetCityDataTodayByMongodbIdVO;
 import com.wentao.ncov.vo.GetDataTodayVO;
 import com.wentao.ncov.vo.GetProvinceVO;
 
@@ -33,4 +35,16 @@ public interface ViewDataService {
      * Gods bless me,code never with bug.
      */
     public RestResponse<GetDataTodayVO> getDataToday();
+
+    /**
+     * 根据id获取对应城市数据
+     *
+     * @param bo
+     * @return com.wentao.ncov.vo.GetCityDataTodayByMongodbIdVO
+     * @throws
+     * @author wentao
+     * @time 2020年02月14日
+     * Gods bless me,code never with bug.
+     */
+    public RestResponse<List<GetCityDataTodayByMongodbIdVO>> getCityDataTodayByMongodbId(GetCityDataTodayByMongodbIdBO bo);
 }

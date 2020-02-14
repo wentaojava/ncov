@@ -57,6 +57,14 @@
         </foreach>
 
     </select>
+    <select id="selectDataByProvince" resultType="com.wentao.ncov.entity.mysql.AreaData">
+        <foreach collection="list" item="item" index="index" separator="UNION">
+            (select id, province_Name, province_Short_Name, country, confirmed_Count, suspected_Count,
+            cured_Count, dead_Count, location_Id, update_Time
+            from area_data
+            where province_Short_Name=#{item.provinceShortName} order by update_Time desc limit 1)
+        </foreach>
+    </select>
 
 
     <insert id="insertAll" parameterType="java.util.List">

@@ -1,8 +1,10 @@
 package com.wentao.ncov.vo;
 
+import com.wentao.ncov.entity.mysql.AreaData;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author wentao
@@ -29,4 +31,13 @@ public class GetDataTodayVO implements Serializable {
      * 死亡人数
      */
     private Integer deadCount;
+
+    /**
+     * id
+     */
+    private String id;
+    /**
+     * 省份数据集合
+     */
+    private List<AreaData> areaDataList;
 }

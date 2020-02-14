@@ -4,6 +4,7 @@ import com.wentao.ncov.entity.mongo.DXYAreaCityEntity;
 import com.wentao.ncov.entity.mongo.DXYAreaEntity;
 import com.wentao.ncov.entity.mysql.AreaData;
 import com.wentao.ncov.entity.mysql.CityData;
+import com.wentao.ncov.vo.GetCityDataTodayByMongodbIdVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -21,4 +22,6 @@ public interface MapStructUtil {
     AreaData buildAreaData(DXYAreaEntity dxyAreaEntity);
 
     CityData buildCityData(DXYAreaCityEntity dxyAreaCityEntity);
+
+    GetCityDataTodayByMongodbIdVO buildCityDataForVO(DXYAreaCityEntity dxyAreaCityEntity);
 }

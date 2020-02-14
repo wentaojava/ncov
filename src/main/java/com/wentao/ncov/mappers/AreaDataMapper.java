@@ -50,4 +50,16 @@ public interface AreaDataMapper {
      * Gods bless me,code never with bug.
      */
     List<AreaData> selectDataByUpdate(@Param("list") List<ProvinceData> provinceDataListForCheckDouble, @Param("date") Date time);
+
+    /**
+     * 根据省份获取更新时间为最近的数据
+     *
+     * @param provinceForNull
+     * @return
+     * @throws
+     * @author wentao
+     * @time 2020年02月14日
+     * Gods bless me,code never with bug.
+     */
+    List<AreaData> selectDataByProvince(@Param("list") List<ProvinceData> provinceForNull);
 }

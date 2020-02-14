@@ -1,10 +1,15 @@
 package com.wentao.ncov.controller;
 
+import com.wentao.ncov.bo.GetCityDataTodayByMongodbIdBO;
 import com.wentao.ncov.service.ViewDataService;
+import com.wentao.ncov.util.request.RestRequest;
 import com.wentao.ncov.util.response.RestResponse;
+import com.wentao.ncov.vo.GetCityDataTodayByMongodbIdVO;
 import com.wentao.ncov.vo.GetDataTodayVO;
 import com.wentao.ncov.vo.GetProvinceVO;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,6 +59,22 @@ public class ViewDataController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public RestResponse<GetDataTodayVO> getDataToday() {
         return viewDataService.getDataToday();
+    }
+
+    /**
+     * 根据id获取对应城市数据
+     *
+     * @param restRequest
+     * @return com.wentao.ncov.vo.GetCityDataTodayByMongodbIdVO
+     * @throws
+     * @author wentao
+     * @time 2020年02月14日
+     * Gods bless me,code never with bug.
+     */
+    @RequestMapping(value = "/getCityDataTodayByMongodbId", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public RestResponse<List<GetCityDataTodayByMongodbIdVO>> getCityDataTodayByMongodbId(@Validated @RequestBody RestRequest<GetCityDataTodayByMongodbIdBO> restRequest) {
+        return viewDataService.getCityDataTodayByMongodbId(restRequest.getBody());
     }
 
 
