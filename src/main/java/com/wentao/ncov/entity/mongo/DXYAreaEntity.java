@@ -23,6 +23,7 @@ public class DXYAreaEntity implements Serializable {
     private String country;
     private String comment;
     private Integer confirmedCount;
+    private Integer currentConfirmedCount;
     private Integer suspectedCount;
     private Integer curedCount;
     private Integer deadCount;

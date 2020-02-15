@@ -16,6 +16,7 @@
         <result column="dead_Count" property="deadCount" jdbcType="VARCHAR"/>
         <result column="location_Id" property="locationId" jdbcType="INTEGER"/>
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="current_Confirmed_Count" property="currentConfirmedCount" jdbcType="VARCHAR"/>
     </resultMap>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         <!--
@@ -37,10 +38,10 @@
         </selectKey>
         insert into city_data (parent_location_Id, city_Name, confirmed_Count,
         suspected_Count, cured_Count, dead_Count,
-        location_Id, create_time)
+        location_Id, create_time,current_Confirmed_Count)
         values (#{parentLocationId,jdbcType=INTEGER}, #{cityName,jdbcType=VARCHAR}, #{confirmedCount,jdbcType=VARCHAR},
         #{suspectedCount,jdbcType=VARCHAR}, #{curedCount,jdbcType=VARCHAR}, #{deadCount,jdbcType=VARCHAR},
-        #{locationId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+        #{locationId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{currentConfirmedCount,jdbcType=VARCHAR})
     </insert>
 
     <update id="updateByPrimaryKey" parameterType="com.wentao.ncov.entity.mysql.CityData">
@@ -53,6 +54,7 @@
         set parent_location_Id = #{parentLocationId,jdbcType=INTEGER},
         city_Name = #{cityName,jdbcType=VARCHAR},
         confirmed_Count = #{confirmedCount,jdbcType=VARCHAR},
+        current_Confirmed_Count = #{currentConfirmedCount,jdbcType=VARCHAR},
         suspected_Count = #{suspectedCount,jdbcType=VARCHAR},
         cured_Count = #{curedCount,jdbcType=VARCHAR},
         dead_Count = #{deadCount,jdbcType=VARCHAR},
@@ -67,7 +69,7 @@
           This element was generated on Tue Feb 11 16:09:05 CST 2020.
         -->
         select id, parent_location_Id, city_Name, confirmed_Count, suspected_Count, cured_Count,
-        dead_Count, location_Id, create_time
+        dead_Count, location_Id, create_time,current_Confirmed_Count
         from city_data
         where id = #{id,jdbcType=BIGINT}
     </select>
@@ -78,12 +80,12 @@
           This element was generated on Tue Feb 11 16:09:05 CST 2020.
         -->
         select id, parent_location_Id, city_Name, confirmed_Count, suspected_Count, cured_Count,
-        dead_Count, location_Id, create_time
+        dead_Count, location_Id, create_time,current_Confirmed_Count
         from city_data
     </select>
     <select id="selectDataByLocationIdAndcreateTime" resultType="com.wentao.ncov.entity.mysql.CityData">
         select id, parent_location_Id, city_Name, confirmed_Count, suspected_Count, cured_Count,
-        dead_Count, location_Id, create_time
+        dead_Count, location_Id, create_time,current_Confirmed_Count
         from city_data where DATE_FORMAT(create_time,'%Y-%m-%d')=DATE_FORMAT(#{date},'%Y-%m-%d') and parent_location_Id
         in
         <foreach collection="list" index="index" item="province" separator="," open="(" close=")">
@@ -94,7 +96,7 @@
     <insert id="insertAll" parameterType="java.util.List">
         insert into city_data (parent_location_Id, city_Name, confirmed_Count,
         suspected_Count, cured_Count, dead_Count,
-        location_Id, create_time)
+        location_Id, create_time,current_Confirmed_Count)
         values
         <foreach collection="list" index="index" item="cityData" separator=",">
             (#{cityData.parentLocationId,jdbcType=INTEGER},
@@ -104,7 +106,7 @@
             #{cityData.curedCount,jdbcType=VARCHAR},
             #{cityData.deadCount,jdbcType=VARCHAR},
             #{cityData.locationId,jdbcType=INTEGER},
-            #{cityData.createTime,jdbcType=TIMESTAMP})
+            #{cityData.createTime,jdbcType=TIMESTAMP},#{cityData.currentConfirmedCount,jdbcType=VARCHAR})
         </foreach>
     </insert>
 </mapper>

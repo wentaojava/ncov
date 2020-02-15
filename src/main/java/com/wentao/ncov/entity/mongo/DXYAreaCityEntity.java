@@ -14,6 +14,7 @@ public class DXYAreaCityEntity implements Serializable {
 
     private static final long serialVersionUID = 6141561610662862392L;
     private String cityName;
+    private Integer currentConfirmedCount;
     private Integer confirmedCount;
     private Integer suspectedCount;
     private Integer curedCount;

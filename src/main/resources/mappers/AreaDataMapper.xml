@@ -17,6 +17,7 @@
         <result column="dead_Count" jdbcType="INTEGER" property="deadCount"/>
         <result column="location_Id" jdbcType="INTEGER" property="locationId"/>
         <result column="update_Time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="current_Confirmed_Count" property="currentConfirmedCount" jdbcType="INTEGER"/>
     </resultMap>
     <insert id="insert" parameterType="com.wentao.ncov.entity.mysql.AreaData">
         <!--
@@ -30,11 +31,11 @@
         insert into area_data (province_Name, province_Short_Name,
         country, confirmed_Count, suspected_Count,
         cured_Count, dead_Count, location_Id,
-        update_Time)
+        update_Time,current_Confirmed_Count)
         values (#{provinceName,jdbcType=VARCHAR}, #{provinceShortName,jdbcType=VARCHAR},
         #{country,jdbcType=VARCHAR}, #{confirmedCount,jdbcType=INTEGER}, #{suspectedCount,jdbcType=INTEGER},
         #{curedCount,jdbcType=INTEGER}, #{deadCount,jdbcType=INTEGER}, #{locationId,jdbcType=INTEGER},
-        #{updateTime,jdbcType=TIMESTAMP})
+        #{updateTime,jdbcType=TIMESTAMP}, #{currentConfirmedCount,jdbcType=INTEGER})
     </insert>
     <select id="selectAll" resultMap="BaseResultMap">
         <!--
@@ -43,13 +44,13 @@
           This element was generated on Mon Feb 10 18:11:22 CST 2020.
         -->
         select id, province_Name, province_Short_Name, country, confirmed_Count, suspected_Count,
-        cured_Count, dead_Count, location_Id, update_Time
+        cured_Count, dead_Count, location_Id, update_Time,current_Confirmed_Count
         from area_data
     </select>
 
     <select id="selectDataByUpdate" resultType="com.wentao.ncov.entity.mysql.AreaData">
         select id, province_Name, province_Short_Name, country, confirmed_Count, suspected_Count,
-        cured_Count, dead_Count, location_Id, update_Time
+        cured_Count, dead_Count, location_Id, update_Time,current_Confirmed_Count
         from area_data where DATE_FORMAT(update_Time,'%Y-%m-%d')=DATE_FORMAT(#{date},'%Y-%m-%d') and province_Short_Name
         in
         <foreach collection="list" index="index" item="province" separator="," open="(" close=")">
@@ -60,7 +61,7 @@
     <select id="selectDataByProvince" resultType="com.wentao.ncov.entity.mysql.AreaData">
         <foreach collection="list" item="item" index="index" separator="UNION">
             (select id, province_Name, province_Short_Name, country, confirmed_Count, suspected_Count,
-            cured_Count, dead_Count, location_Id, update_Time
+            cured_Count, dead_Count, location_Id, update_Time,current_Confirmed_Count
             from area_data
             where province_Short_Name=#{item.provinceShortName} order by update_Time desc limit 1)
         </foreach>
@@ -71,7 +72,7 @@
         insert into area_data (id,province_Name, province_Short_Name,
         country, confirmed_Count, suspected_Count,
         cured_Count, dead_Count, location_Id,
-        update_Time)
+        update_Time,current_Confirmed_Count)
         values
         <foreach collection="list" index="index" item="areaData" separator=",">
             (
@@ -84,7 +85,8 @@
             #{areaData.curedCount,jdbcType=INTEGER},
             #{areaData.deadCount,jdbcType=INTEGER},
             #{areaData.locationId,jdbcType=INTEGER},
-            #{areaData.updateTime,jdbcType=TIMESTAMP}
+            #{areaData.updateTime,jdbcType=TIMESTAMP,
+             #{currentConfirmedCount.deadCount,jdbcType=INTEGER}}
             )
         </foreach>
     </insert>
