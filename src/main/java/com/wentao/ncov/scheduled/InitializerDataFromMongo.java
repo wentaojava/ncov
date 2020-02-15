@@ -21,10 +21,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -173,7 +170,7 @@ public class InitializerDataFromMongo {
             for (ProvinceData data : provinceDataListForCheckDouble) {
                 AreaData areaData = new AreaData();
                 BeanUtils.copyProperties(data, areaData);
-                areaData.setId(String.valueOf(System.currentTimeMillis()));
+                areaData.setId(UUID.randomUUID().toString());
                 areaData.setConfirmedCount(0);
                 areaData.setCuredCount(0);
                 areaData.setDeadCount(0);
