@@ -65,12 +65,14 @@ public class InitializerDataFromMongo {
         today.setMinutes(0);
         today.setSeconds(0);
 
-       /* SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        /*
+        //此处用于修复定时任务出错的某天数据
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date startDate = null;
         Date today = null;
         try {
-            startDate = sdf.parse("2020-02-13");
-            today = sdf.parse("2020-02-14");
+            startDate = sdf.parse("2020-02-16");
+            today = sdf.parse("2020-02-17");
         } catch (ParseException e) {
             e.printStackTrace();
         }*/
