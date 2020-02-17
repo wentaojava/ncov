@@ -16,8 +16,6 @@ spring boot 项目，用于查询疫情数据<br>
 <br>
 <br>
 TODO:<br>
-=
-* 疫情地图数据获取
 * 详细数据查询
 * 数据分析
 --
@@ -26,6 +24,7 @@ TODO:<br>
 <br>
 DONE:<br>
 * 定时从mongoDB中获取当天数据存至mysql功能
+* 疫情地图数据获取
 
 <br>
 maven打包镜像之前需要执行maven install，先把项目打成jar包

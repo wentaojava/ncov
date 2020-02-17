@@ -85,8 +85,8 @@
             #{areaData.curedCount,jdbcType=INTEGER},
             #{areaData.deadCount,jdbcType=INTEGER},
             #{areaData.locationId,jdbcType=INTEGER},
-            #{areaData.updateTime,jdbcType=TIMESTAMP,
-             #{currentConfirmedCount.deadCount,jdbcType=INTEGER}}
+            #{areaData.updateTime,jdbcType=TIMESTAMP},
+            #{areaData.currentConfirmedCount,jdbcType=INTEGER}
             )
         </foreach>
     </insert>
