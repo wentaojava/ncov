@@ -31,7 +31,10 @@ public class GetDataTodayVO implements Serializable {
      * 死亡人数
      */
     private Integer deadCount;
-
+    /**
+     * 现存确诊人数
+     */
+    private Integer currentConfirmedCount;
     /**
      * id
      */

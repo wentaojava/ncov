@@ -74,6 +74,7 @@ public class ViewDataServiceImpl implements ViewDataService {
         AtomicReference<Integer> suspectedCount = new AtomicReference<>(0);
         AtomicReference<Integer> curedCount = new AtomicReference<>(0);
         AtomicReference<Integer> deadCount = new AtomicReference<>(0);
+        AtomicReference<Integer> currentConfirmedCount = new AtomicReference<>(0);
         List<AreaData> areaDataList = new ArrayList<>();
         List<ProvinceData> provinceForNull = new ArrayList<>();
         //依次判断个省份数据是否齐全并计算
@@ -85,6 +86,7 @@ public class ViewDataServiceImpl implements ViewDataService {
                 suspectedCount.updateAndGet(v -> v + areaData.getSuspectedCount());
                 curedCount.updateAndGet(v -> v + areaData.getCuredCount());
                 deadCount.updateAndGet(v -> v + areaData.getDeadCount());
+                currentConfirmedCount.updateAndGet(v -> v + areaData.getCurrentConfirmedCount());
                 areaDataList.add(areaData);
             } else {
                 provinceForNull.add(province);
@@ -99,6 +101,7 @@ public class ViewDataServiceImpl implements ViewDataService {
                     suspectedCount.updateAndGet(v -> v + areaData1.getSuspectedCount());
                     curedCount.updateAndGet(v -> v + areaData1.getCuredCount());
                     deadCount.updateAndGet(v -> v + areaData1.getDeadCount());
+                    currentConfirmedCount.updateAndGet(v -> v + areaData1.getCurrentConfirmedCount());
                 });
             }
         }
@@ -108,6 +111,7 @@ public class ViewDataServiceImpl implements ViewDataService {
         getDataTodayVO.setSuspectedCount(suspectedCount.get());
         getDataTodayVO.setCuredCount(curedCount.get());
         getDataTodayVO.setDeadCount(deadCount.get());
+        getDataTodayVO.setCurrentConfirmedCount(currentConfirmedCount.get());
         getDataTodayVO.setAreaDataList(areaDataList);
         return new RestResponse<>(getDataTodayVO);
     }
