@@ -74,13 +74,13 @@ public class MongoDBServiceImpl implements MongoDBService {
     @Override
     public DXYAreaEntity getDataTodayByMongodbId(String id) {
         Query query = new Query();
-        Criteria criteria = Criteria.where("_id").is(id);
+        Criteria criteria = Criteria.where("id").is(id);
         query.addCriteria(criteria);
         DXYAreaEntity dxyAreaEntity = null;
         try {
             dxyAreaEntity = mongoTemplate.findOne(query, DXYAreaEntity.class);
         } catch (Exception e) {
-            log.error("get data for (_id=" + id + ") from mongoDB error,e=", e);
+            log.error("get data for (id=" + id + ") from mongoDB error,e=", e);
         }
         return dxyAreaEntity;
     }

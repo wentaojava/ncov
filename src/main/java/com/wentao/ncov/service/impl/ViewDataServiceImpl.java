@@ -139,12 +139,19 @@ public class ViewDataServiceImpl implements ViewDataService {
         if (null == dxyAreaEntity) {
             return new RestResponse<>(list);
         } else {
-            dxyAreaEntity.getCities().forEach(dxyAreaCityEntity -> {
-                if (null != dxyAreaCityEntity) {
-                    GetCityDataTodayByMongodbIdVO vo = MapStructUtil.INSTANCE.buildCityDataForVO(dxyAreaCityEntity);
-                    list.add(vo);
-                }
-            });
+            if (CollectionUtils.isEmpty(dxyAreaEntity.getCities())) {
+                //城市或地区为空展示省份
+                GetCityDataTodayByMongodbIdVO vo = MapStructUtil.INSTANCE.buildCityDataForVO(dxyAreaEntity);
+                list.add(vo);
+            } else {
+                dxyAreaEntity.getCities().forEach(dxyAreaCityEntity -> {
+                    if (null != dxyAreaCityEntity) {
+                        GetCityDataTodayByMongodbIdVO vo = MapStructUtil.INSTANCE.buildCityDataForVO(dxyAreaCityEntity);
+                        list.add(vo);
+                    }
+                });
+            }
+
             return new RestResponse<>(list);
         }
 

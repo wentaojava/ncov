@@ -16,6 +16,7 @@ public class GetCityDataTodayByMongodbIdVO implements Serializable {
     private String cityName;
     private Integer confirmedCount;
     private Integer suspectedCount;
+    private Integer currentConfirmedCount;
     private Integer curedCount;
     private Integer deadCount;
     private Integer locationId;

@@ -24,4 +24,7 @@ public interface MapStructUtil {
     CityData buildCityData(DXYAreaCityEntity dxyAreaCityEntity);
 
     GetCityDataTodayByMongodbIdVO buildCityDataForVO(DXYAreaCityEntity dxyAreaCityEntity);
+
+    @Mapping(target = "cityName", source = "provinceShortName")
+    GetCityDataTodayByMongodbIdVO buildCityDataForVO(DXYAreaEntity dxyAreaEntity);
 }
