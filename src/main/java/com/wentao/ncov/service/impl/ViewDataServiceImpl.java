@@ -68,7 +68,7 @@ public class ViewDataServiceImpl implements ViewDataService {
     public RestResponse<GetDataTodayVO> getDataToday() {
         //查询中国省份
         List<ProvinceData> provinceData = provinceDataMapper.selectProvinceByCountry("中国");
-        Map<String, DXYAreaEntity> areaEntityMap = mongoDBService.getDataToday(provinceData);
+        Map<String, DXYAreaEntity> areaEntityMap = mongoDBService.getDataToday();
 
         AtomicReference<Integer> confirmedCount = new AtomicReference<>(0);
         AtomicReference<Integer> suspectedCount = new AtomicReference<>(0);

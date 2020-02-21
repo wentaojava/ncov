@@ -1,9 +1,7 @@
 package com.wentao.ncov.service;
 
 import com.wentao.ncov.entity.mongo.DXYAreaEntity;
-import com.wentao.ncov.entity.mysql.ProvinceData;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,16 +13,16 @@ import java.util.Map;
  */
 public interface MongoDBService {
     /**
-     * 根据省份获取数据
+     * 获取当日数据
      *
-     * @param provinceData
+     * @param
      * @return
      * @throws
      * @author wentao
      * @time 2020年02月13日
      * Gods bless me,code never with bug.
      */
-    public Map<String, DXYAreaEntity> getDataToday(List<ProvinceData> provinceData);
+    public Map<String, DXYAreaEntity> getDataToday();
 
     /**
      * 根据id获取对应数据

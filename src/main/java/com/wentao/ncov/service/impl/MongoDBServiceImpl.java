@@ -2,20 +2,19 @@ package com.wentao.ncov.service.impl;
 
 
 import com.wentao.ncov.entity.mongo.DXYAreaEntity;
-import com.wentao.ncov.entity.mysql.ProvinceData;
 import com.wentao.ncov.service.MongoDBService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author wentao
@@ -30,9 +29,9 @@ public class MongoDBServiceImpl implements MongoDBService {
 
 
     /**
-     * 根据省份获取数据
+     * 获取当日数据
      *
-     * @param provinceData
+     * @param
      * @return
      * @throws
      * @author wentao
@@ -40,23 +39,19 @@ public class MongoDBServiceImpl implements MongoDBService {
      * Gods bless me,code never with bug.
      */
     @Override
-    public Map<String, DXYAreaEntity> getDataToday(List<ProvinceData> provinceData) {
-        Map<String, DXYAreaEntity> dxyAreaEntityMap = new HashMap<>(provinceData.size());
-        for (ProvinceData province : provinceData) {
-            if (!StringUtils.isEmpty(province.getCountry()) && province.getCountry().equals("中国")) {
-                Query query = new Query();
-                Criteria criteria = Criteria.where("provinceShortName").is(province.getProvinceShortName());
-                query.addCriteria(criteria);
-                query.with(Sort.by(Sort.Order.desc("updateTime")));
-                DXYAreaEntity dxyAreaEntity = null;
-                try {
-                    dxyAreaEntity = mongoTemplate.findOne(query, DXYAreaEntity.class);
-                } catch (Exception e) {
-                    log.error("get data for " + province.getProvinceShortName() + " from mongoDB error,e=", e);
-                }
-                dxyAreaEntityMap.put(province.getProvinceShortName(), dxyAreaEntity);
-            }
+    public Map<String, DXYAreaEntity> getDataToday() {
+        //2020221更新python值存储当日最新数据，因此此处查询mongoDB时去除循环条件
+        List<DXYAreaEntity> dxyAreaEntityList = new ArrayList<>();
+        Query query = new Query();
+        Criteria criteria = Criteria.where("country").is("中国");
+        query.addCriteria(criteria);
+        try {
+            dxyAreaEntityList = mongoTemplate.find(query, DXYAreaEntity.class);
+        } catch (Exception e) {
+            log.error("get data size：" + dxyAreaEntityList.size() + " from mongoDB error,e=", e);
         }
+        Map<String, DXYAreaEntity> dxyAreaEntityMap = dxyAreaEntityList.stream().collect(
+                Collectors.toMap(DXYAreaEntity::getProvinceShortName, Function.identity(), (a, b) -> b));
         return dxyAreaEntityMap;
     }
 
