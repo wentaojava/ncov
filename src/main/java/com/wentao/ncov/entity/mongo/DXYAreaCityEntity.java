@@ -13,12 +13,29 @@ import java.io.Serializable;
 public class DXYAreaCityEntity implements Serializable {
 
     private static final long serialVersionUID = 6141561610662862392L;
-    private String cityName;
-    private Integer currentConfirmedCount;
-    private Integer confirmedCount;
-    private Integer suspectedCount;
-    private Integer curedCount;
-    private Integer deadCount;
-    private Integer locationId;
+    private String country;
+    private String province;
+    private String city;
+    /**
+     * 确诊人数
+     */
+    private String sure_cnt;
+    /**
+     * 疑似人数
+     */
+    private String like_cnt;
+    /**
+     * 死亡人数
+     */
+    private String die_cnt;
+    /**
+     * 治愈人数
+     */
+    private String cure_cnt;
+    /**
+     * 新增确诊数
+     */
+    private String sure_new_cnt;
+    private String sure_nzd_cnt;
 }
 

@@ -2,6 +2,7 @@ package com.wentao.ncov.service.impl;
 
 import com.wentao.ncov.bo.GetCityDataTodayByMongodbIdBO;
 import com.wentao.ncov.entity.mongo.DXYAreaEntity;
+import com.wentao.ncov.entity.mongo.DXYNationalData;
 import com.wentao.ncov.entity.mysql.AreaData;
 import com.wentao.ncov.entity.mysql.ProvinceData;
 import com.wentao.ncov.exceptionhandler.SystemErrorCode;
@@ -23,7 +24,6 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author wentao
@@ -69,24 +69,13 @@ public class ViewDataServiceImpl implements ViewDataService {
         //查询中国省份
         List<ProvinceData> provinceData = provinceDataMapper.selectProvinceByCountry("中国");
         Map<String, DXYAreaEntity> areaEntityMap = mongoDBService.getDataToday();
-
-        AtomicReference<Integer> confirmedCount = new AtomicReference<>(0);
-        AtomicReference<Integer> suspectedCount = new AtomicReference<>(0);
-        AtomicReference<Integer> curedCount = new AtomicReference<>(0);
-        AtomicReference<Integer> deadCount = new AtomicReference<>(0);
-        AtomicReference<Integer> currentConfirmedCount = new AtomicReference<>(0);
         List<AreaData> areaDataList = new ArrayList<>();
         List<ProvinceData> provinceForNull = new ArrayList<>();
-        //依次判断个省份数据是否齐全并计算
+        //依次判断个省份数据是否齐全
         provinceData.forEach(province -> {
             if (areaEntityMap.containsKey(province.getProvinceShortName())
                     && null != areaEntityMap.get(province.getProvinceShortName())) {
                 AreaData areaData = MapStructUtil.INSTANCE.buildAreaData(areaEntityMap.get(province.getProvinceShortName()));
-                confirmedCount.updateAndGet(v -> v + areaData.getConfirmedCount());
-                suspectedCount.updateAndGet(v -> v + areaData.getSuspectedCount());
-                curedCount.updateAndGet(v -> v + areaData.getCuredCount());
-                deadCount.updateAndGet(v -> v + areaData.getDeadCount());
-                currentConfirmedCount.updateAndGet(v -> v + areaData.getCurrentConfirmedCount());
                 areaDataList.add(areaData);
             } else {
                 provinceForNull.add(province);
@@ -96,22 +85,17 @@ public class ViewDataServiceImpl implements ViewDataService {
         if (!CollectionUtils.isEmpty(provinceForNull)) {
             List<AreaData> areaData = areaDataMapper.selectDataByProvince(provinceForNull);
             if (!CollectionUtils.isEmpty(areaData)) {
-                areaData.forEach(areaData1 -> {
-                    confirmedCount.updateAndGet(v -> v + areaData1.getConfirmedCount());
-                    suspectedCount.updateAndGet(v -> v + areaData1.getSuspectedCount());
-                    curedCount.updateAndGet(v -> v + areaData1.getCuredCount());
-                    deadCount.updateAndGet(v -> v + areaData1.getDeadCount());
-                    currentConfirmedCount.updateAndGet(v -> v + areaData1.getCurrentConfirmedCount());
-                });
+                areaDataList.addAll(areaData);
             }
         }
 
+
         GetDataTodayVO getDataTodayVO = new GetDataTodayVO();
-        getDataTodayVO.setConfirmedCount(confirmedCount.get());
-        getDataTodayVO.setSuspectedCount(suspectedCount.get());
-        getDataTodayVO.setCuredCount(curedCount.get());
-        getDataTodayVO.setDeadCount(deadCount.get());
-        getDataTodayVO.setCurrentConfirmedCount(currentConfirmedCount.get());
+        //从mongodb中查询统计数据
+        DXYNationalData nationalData = mongoDBService.getNationalDataToday();
+        if (null != nationalData) {
+            getDataTodayVO = MapStructUtil.INSTANCE.buildDXYNationalDataToGetDataTodayVO(nationalData);
+        }
         getDataTodayVO.setAreaDataList(areaDataList);
         return new RestResponse<>(getDataTodayVO);
     }

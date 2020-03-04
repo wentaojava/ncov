@@ -1,6 +1,7 @@
 package com.wentao.ncov.service;
 
 import com.wentao.ncov.entity.mongo.DXYAreaEntity;
+import com.wentao.ncov.entity.mongo.DXYNationalData;
 
 import java.util.Map;
 
@@ -35,4 +36,16 @@ public interface MongoDBService {
      * Gods bless me,code never with bug.
      */
     public DXYAreaEntity getDataTodayByMongodbId(String id);
+
+    /**
+     * 获取当日统计数据
+     *
+     * @param
+     * @return
+     * @throws
+     * @author wentao
+     * @time 2020年03月03日
+     * Gods bless me,code never with bug.
+     */
+    public DXYNationalData getNationalDataToday();
 }

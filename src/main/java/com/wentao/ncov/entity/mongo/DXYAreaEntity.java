@@ -20,14 +20,12 @@ public class DXYAreaEntity implements Serializable {
     private String id;
     private String provinceName;
     private String provinceShortName;
-    private String country;
-    private String comment;
-    private Integer confirmedCount;
-    private Integer currentConfirmedCount;
-    private Integer suspectedCount;
-    private Integer curedCount;
-    private Integer deadCount;
-    private Integer locationId;
-    private Long updateTime;
+    private String confirmedCount;
+    private String newConfirmedCount;
+    private String suspectedCount;
+    private String curedCount;
+    private String deadCount;
+    private String sureNzdCnt;
+    private String createTime;
     private List<DXYAreaCityEntity> cities;
 }

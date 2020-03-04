@@ -24,6 +24,7 @@ import java.sql.SQLException;
 public class DruidDBConfig {
 
 
+
     @Value("${spring.datasource.url}")
     private String dbUrl;
 
@@ -130,9 +131,9 @@ public class DruidDBConfig {
         //黑名单
         //servletRegistrationBean.addInitParameter("deny", "129.168.1.12");
         //用户名
-        servletRegistrationBean.addInitParameter("loginUsername", "用户名");
+        servletRegistrationBean.addInitParameter("loginUsername", "root");
         //密码
-        servletRegistrationBean.addInitParameter("loginPassword", "密码");
+        servletRegistrationBean.addInitParameter("loginPassword", "wt@7651607");
         //是否可以重置数据源
         servletRegistrationBean.addInitParameter("resetEnable", "false");
         return servletRegistrationBean;

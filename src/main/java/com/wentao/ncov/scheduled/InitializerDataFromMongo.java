@@ -2,11 +2,14 @@ package com.wentao.ncov.scheduled;
 
 import com.wentao.ncov.entity.mongo.DXYAreaCityEntity;
 import com.wentao.ncov.entity.mongo.DXYAreaEntity;
+import com.wentao.ncov.entity.mongo.DXYNationalData;
 import com.wentao.ncov.entity.mysql.AreaData;
 import com.wentao.ncov.entity.mysql.CityData;
+import com.wentao.ncov.entity.mysql.NationalData;
 import com.wentao.ncov.entity.mysql.ProvinceData;
 import com.wentao.ncov.mappers.AreaDataMapper;
 import com.wentao.ncov.mappers.CityDataMapper;
+import com.wentao.ncov.mappers.NationalDataMapper;
 import com.wentao.ncov.mappers.ProvinceDataMapper;
 import com.wentao.ncov.util.MapStructUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +51,9 @@ public class InitializerDataFromMongo {
     @Resource
     private ProvinceDataMapper provinceDataMapper;
 
+    @Resource
+    private NationalDataMapper nationalDataMapper;
+
     @Scheduled(cron = "0 10 0 * * *")
     public void scheduledMethod() {
         log.info("get data from mongo start.....");
@@ -56,14 +62,11 @@ public class InitializerDataFromMongo {
         Calendar c = Calendar.getInstance();
         c.setTime(today);
         c.add(Calendar.DAY_OF_MONTH, -1);
-        Date startDate = c.getTime();
-        startDate.setHours(0);
-        startDate.setMinutes(0);
-        startDate.setSeconds(0);
 
-        today.setHours(0);
-        today.setMinutes(0);
-        today.setSeconds(0);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+        sdf.setTimeZone(TimeZone.getTimeZone("CTT"));
+        String date = sdf.format(c.getTime());
+
 
         /*
         //此处用于修复定时任务出错的某天数据
@@ -78,13 +81,13 @@ public class InitializerDataFromMongo {
         }*/
 
         Query query = new Query();
-        Criteria criteria = Criteria.where("updateTime").gt(startDate.getTime()).lt(today.getTime());
+        Criteria criteria = Criteria.where("createTime").is(date);
         query.addCriteria(criteria);
         try {
             dxyAreaEntityList = mongoTemplate.find(query, DXYAreaEntity.class);
         } catch (Exception e) {
             log.error("get  data from mongo failed,exception=", e);
-            log.info("get  data from mongo end");
+            log.info("get  data from mongo end with exception");
             return;
         }
 
@@ -94,35 +97,29 @@ public class InitializerDataFromMongo {
             return;
         }
 
-        //取出当天updateTime最大的重复数据
-        List<DXYAreaEntity> areaEntityListForRemoveDuplication = new ArrayList<>(dxyAreaEntityList);
-        List<DXYAreaEntity> list = dxyAreaEntityList.stream().filter(dxyAreaEntity -> {
-            Boolean flag = true;
-            for (DXYAreaEntity areaEntity : areaEntityListForRemoveDuplication) {
-                if (areaEntity.getProvinceShortName().equals(dxyAreaEntity.getProvinceShortName())) {
-                    if (areaEntity.getUpdateTime() > dxyAreaEntity.getUpdateTime()) {
-                        flag = false;
-                    }
-                }
-            }
-            return flag;
-        }).collect(Collectors.toList());
+        //获取省份信息
+        List<ProvinceData> provinceData = provinceDataMapper.selectAll();
+
+        //省份转map，便于城市信息中LocationId的赋值
+        Map<String, Integer> provinceMap = provinceData.stream().collect(Collectors.toMap(ProvinceData::getProvinceName, ProvinceData::getLocationId));
+
         //转成mysql对应对象
-        List<AreaData> areaDataList = list.stream().map(dxyAreaEntity -> {
+        List<AreaData> areaDataList = dxyAreaEntityList.stream().map(dxyAreaEntity -> {
             AreaData areaData = MapStructUtil.INSTANCE.buildAreaData(dxyAreaEntity);
-            areaData.setUpdateTime(new Date(dxyAreaEntity.getUpdateTime()));
+            areaData.setLocationId(provinceMap.get(areaData.getProvinceName()));
+            areaData.setUpdateTime(c.getTime());
             return areaData;
         }).collect(Collectors.toList());
 
 
         //取出城市疫情数据
         List<CityData> cityDataList = new ArrayList<>();
-        for (DXYAreaEntity dxyAreaEntity : list) {
+        for (DXYAreaEntity dxyAreaEntity : dxyAreaEntityList) {
             if (!CollectionUtils.isEmpty(dxyAreaEntity.getCities())) {
                 for (DXYAreaCityEntity city : dxyAreaEntity.getCities()) {
                     CityData cityData = MapStructUtil.INSTANCE.buildCityData(city);
-                    cityData.setParentLocationId(dxyAreaEntity.getLocationId());
-                    cityData.setCreateTime(new Date());
+                    cityData.setParentLocationId(provinceMap.get(dxyAreaEntity.getProvinceName()));
+                    cityData.setCreateTime(c.getTime());
                     cityDataList.add(cityData);
                 }
             }
@@ -141,14 +138,15 @@ public class InitializerDataFromMongo {
             throw new RuntimeException();
         }
 
-        //检查前一日是否有数据更新，如果没有则取出上一天的数据再次存储为当天数据
-        //获取省份信息
-        List<ProvinceData> provinceData = provinceDataMapper.selectAll();
+        //检查前一日是否有数据更新，如果没有则取出上一天的数据再次存储为当天数据;
+        //2020/03/03 更新：去除非中国数据的存储
+
         //根据省份信息判断
         List<ProvinceData> provinceDataListForCheckDouble = provinceData.stream().filter(provinceData1 -> {
             Boolean flag = true;
             for (AreaData areaData : areaDataList) {
-                if (areaData.getProvinceShortName().equals(provinceData1.getProvinceShortName())) {
+                if (areaData.getProvinceShortName().equals(provinceData1.getProvinceShortName())
+                        || !provinceData1.getCountry().equals("中国")) {
                     flag = false;
                 }
             }
@@ -162,7 +160,7 @@ public class InitializerDataFromMongo {
 
         }
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(startDate);
+        calendar.setTime(c.getTime());
         calendar.add(Calendar.DAY_OF_MONTH, -1);
         //获取前一日省份数据
         List<AreaData> areaDataListForYesterday = areaDataMapper.selectDataByUpdate(provinceDataListForCheckDouble, calendar.getTime());
@@ -173,11 +171,11 @@ public class InitializerDataFromMongo {
                 AreaData areaData = new AreaData();
                 BeanUtils.copyProperties(data, areaData);
                 areaData.setId(UUID.randomUUID().toString());
-                areaData.setConfirmedCount(0);
-                areaData.setCuredCount(0);
-                areaData.setDeadCount(0);
-                areaData.setSuspectedCount(0);
-                areaData.setUpdateTime(startDate);
+                areaData.setConfirmedCount("-");
+                areaData.setCuredCount("-");
+                areaData.setDeadCount("-");
+                areaData.setSuspectedCount("-");
+                areaData.setUpdateTime(c.getTime());
                 areaDataListForYesterday.add(areaData);
             }
         } else {
@@ -201,6 +199,22 @@ public class InitializerDataFromMongo {
             throw new RuntimeException();
         }
 
+        //存储前一日全国疫情数据
+        DXYNationalData dxyNationalData = null;
+        try {
+            dxyNationalData = mongoTemplate.findOne(query, DXYNationalData.class);
+        } catch (Exception e) {
+            log.error("get national data from mongo failed,exception=", e);
+            log.info("get data from mongo end with exception");
+            return;
+        }
+        if (null != dxyNationalData) {
+            //转换mysql对象
+            NationalData nationalData = MapStructUtil.INSTANCE.buildDXYNationalData(dxyNationalData);
+            nationalData.setCreateTime(c.getTime());
+            nationalDataMapper.insert(nationalData);
+            log.info("save national data  for Yesterday to mysql end");
+        }
         log.info("get data from mongo end,date=" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
     }
 

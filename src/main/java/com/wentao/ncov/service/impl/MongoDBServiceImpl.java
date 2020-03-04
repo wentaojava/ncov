@@ -2,6 +2,7 @@ package com.wentao.ncov.service.impl;
 
 
 import com.wentao.ncov.entity.mongo.DXYAreaEntity;
+import com.wentao.ncov.entity.mongo.DXYNationalData;
 import com.wentao.ncov.service.MongoDBService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -10,7 +11,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -42,8 +45,10 @@ public class MongoDBServiceImpl implements MongoDBService {
     public Map<String, DXYAreaEntity> getDataToday() {
         //2020221更新python值存储当日最新数据，因此此处查询mongoDB时去除循环条件
         List<DXYAreaEntity> dxyAreaEntityList = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String date = sdf.format(new Date());
         Query query = new Query();
-        Criteria criteria = Criteria.where("country").is("中国");
+        Criteria criteria = Criteria.where("createTime").is(date);
         query.addCriteria(criteria);
         try {
             dxyAreaEntityList = mongoTemplate.find(query, DXYAreaEntity.class);
@@ -78,5 +83,31 @@ public class MongoDBServiceImpl implements MongoDBService {
             log.error("get data for (id=" + id + ") from mongoDB error,e=", e);
         }
         return dxyAreaEntity;
+    }
+
+    /**
+     * 获取当日统计数据
+     *
+     * @param
+     * @return
+     * @throws
+     * @author wentao
+     * @time 2020年03月03日
+     * Gods bless me,code never with bug.
+     */
+    @Override
+    public DXYNationalData getNationalDataToday() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String date = sdf.format(new Date());
+        Query query = new Query();
+        Criteria criteria = Criteria.where("createTime").is(date);
+        query.addCriteria(criteria);
+        DXYNationalData dxyNationalData = null;
+        try {
+            dxyNationalData = mongoTemplate.findOne(query, DXYNationalData.class);
+        } catch (Exception e) {
+            log.error("get data for (date=" + date + ") from mongoDB error,e=", e);
+        }
+        return dxyNationalData;
     }
 }

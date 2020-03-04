@@ -18,23 +18,39 @@ public class GetDataTodayVO implements Serializable {
     /**
      * 确诊人数
      */
-    private Integer confirmedCount;
+    private String confirmedCount;
     /**
      * 疑似人数
      */
-    private Integer suspectedCount;
+    private String suspectedCount;
     /**
      * 治愈人数
      */
-    private Integer curedCount;
+    private String curedCount;
     /**
      * 死亡人数
      */
-    private Integer deadCount;
+    private String deadCount;
     /**
-     * 现存确诊人数
+     * 确诊人数-比昨日新增
      */
-    private Integer currentConfirmedCount;
+    private String confirmedCountIncr;
+
+    /**
+     * 疑似人数-比昨日新增
+     */
+    private String suspectedCountIncr;
+
+    /**
+     * 治愈人数-比昨日新增
+     */
+    private String curedCountIncr;
+
+    /**
+     * 死亡人数-比昨日新增
+     */
+    private String deadCountIncr;
+
     /**
      * id
      */
