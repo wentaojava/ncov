@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.wentao</groupId>
     <artifactId>ncov</artifactId>
-    <version>0.0.1</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
     <name>ncov</name>
     <description>view data for ncov</description>
