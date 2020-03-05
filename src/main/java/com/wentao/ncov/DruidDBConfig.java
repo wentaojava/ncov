@@ -37,46 +37,46 @@ public class DruidDBConfig {
     @Value("${spring.datasource.driver-class-name}")
     private String driverClassName;
 
-    @Value("${spring.datasource.initialSize}")
+    @Value("${spring.datasource.dbcp2.initial-size}")
     private int initialSize;
 
-    @Value("${spring.datasource.minIdle}")
+    @Value("${spring.datasource.dbcp2.min-idle}")
     private int minIdle;
 
-    @Value("${spring.datasource.maxActive}")
+    @Value("${spring.datasource.dbcp2.max-total}")
     private int maxActive;
 
-    @Value("${spring.datasource.maxWait}")
+    @Value("${spring.datasource.dbcp2.max-wait-millis}")
     private int maxWait;
 
-    @Value("${spring.datasource.timeBetweenEvictionRunsMillis}")
+    @Value("${spring.datasource.dbcp2.time-between-eviction-runs-millis}")
     private int timeBetweenEvictionRunsMillis;
 
-    @Value("${spring.datasource.minEvictableIdleTimeMillis}")
+    @Value("${spring.datasource.dbcp2.min-evictable-idle-time-millis}")
     private int minEvictableIdleTimeMillis;
 
-    @Value("${spring.datasource.validationQuery}")
+    @Value("${spring.datasource.dbcp2.validation-query}")
     private String validationQuery;
 
-    @Value("${spring.datasource.testWhileIdle}")
+    @Value("${spring.datasource.dbcp2.test-while-idle}")
     private boolean testWhileIdle;
 
-    @Value("${spring.datasource.testOnBorrow}")
+    @Value("${spring.datasource.dbcp2.test-on-borrow}")
     private boolean testOnBorrow;
 
-    @Value("${spring.datasource.testOnReturn}")
+    @Value("${spring.datasource.dbcp2.test-on-return}")
     private boolean testOnReturn;
 
-    @Value("${spring.datasource.poolPreparedStatements}")
+    @Value("${spring.datasource.dbcp2.pool-prepared-statements}")
     private boolean poolPreparedStatements;
 
-    @Value("${spring.datasource.maxPoolPreparedStatementPerConnectionSize}")
+    @Value("${spring.datasource.dbcp2.max-open-prepared-statements}")
     private int maxPoolPreparedStatementPerConnectionSize;
 
     @Value("${spring.datasource.filters}")
     private String filters;
 
-    @Value("{spring.datasource.connectionProperties}")
+    @Value("{spring.datasource.tomcat.connection-properties}")
     private String connectionProperties;
 
     @Bean
@@ -131,9 +131,9 @@ public class DruidDBConfig {
         //黑名单
         //servletRegistrationBean.addInitParameter("deny", "129.168.1.12");
         //用户名
-        servletRegistrationBean.addInitParameter("loginUsername", "root");
+        servletRegistrationBean.addInitParameter("loginUsername", "用户名");
         //密码
-        servletRegistrationBean.addInitParameter("loginPassword", "wt@7651607");
+        servletRegistrationBean.addInitParameter("loginPassword", "密码");
         //是否可以重置数据源
         servletRegistrationBean.addInitParameter("resetEnable", "false");
         return servletRegistrationBean;
