@@ -48,6 +48,5 @@ public interface MapStructUtil {
     NationalData buildDXYNationalData(DXYNationalData dxyNationalData);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "areaDataList", ignore = true)
     GetDataTodayVO buildDXYNationalDataToGetDataTodayVO(DXYNationalData dxyNationalData);
 }
