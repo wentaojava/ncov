@@ -2,6 +2,7 @@ package com.wentao.ncov.util;
 
 import com.wentao.ncov.entity.mongo.DXYAreaCityEntity;
 import com.wentao.ncov.entity.mongo.DXYAreaEntity;
+import com.wentao.ncov.entity.mongo.DXYAreaEntityForMap;
 import com.wentao.ncov.entity.mongo.DXYNationalData;
 import com.wentao.ncov.entity.mysql.AreaData;
 import com.wentao.ncov.entity.mysql.CityData;
@@ -22,6 +23,7 @@ public interface MapStructUtil {
     MapStructUtil INSTANCE = Mappers.getMapper(MapStructUtil.class);
 
 
+    AreaData buildAreaData(DXYAreaEntityForMap dxyAreaEntity);
     AreaData buildAreaData(DXYAreaEntity dxyAreaEntity);
 
     @Mapping(target = "cityName", source = "city")

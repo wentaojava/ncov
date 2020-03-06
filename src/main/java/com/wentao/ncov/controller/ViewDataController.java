@@ -5,6 +5,7 @@ import com.wentao.ncov.service.ViewDataService;
 import com.wentao.ncov.util.request.RestRequest;
 import com.wentao.ncov.util.response.RestResponse;
 import com.wentao.ncov.vo.GetCityDataTodayByMongodbIdVO;
+import com.wentao.ncov.vo.GetDataTodayForMapVO;
 import com.wentao.ncov.vo.GetDataTodayVO;
 import com.wentao.ncov.vo.GetProvinceVO;
 import org.springframework.http.MediaType;
@@ -47,7 +48,7 @@ public class ViewDataController {
     }
 
     /**
-     * 获取当日确诊，疑似，治愈，死亡人数数据
+     * 获取全国疫情数据
      *
      * @return com.wentao.ncov.vo.GetProvinceVO
      * @throws
@@ -59,6 +60,21 @@ public class ViewDataController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public RestResponse<GetDataTodayVO> getDataToday() {
         return viewDataService.getDataToday();
+    }
+
+    /**
+     * 获取各省份疫情数据
+     *
+     * @return com.wentao.ncov.vo.GetProvinceVO
+     * @throws
+     * @author wentao
+     * @time 2020年02月13日
+     * Gods bless me,code never with bug.
+     */
+    @RequestMapping(value = "/getDataTodayForProvince", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public RestResponse<GetDataTodayForMapVO> getDataTodayForProvince() {
+        return viewDataService.getDataTodayForProvince();
     }
 
     /**

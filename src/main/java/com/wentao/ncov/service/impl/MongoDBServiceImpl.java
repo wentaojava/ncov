@@ -2,6 +2,7 @@ package com.wentao.ncov.service.impl;
 
 
 import com.wentao.ncov.entity.mongo.DXYAreaEntity;
+import com.wentao.ncov.entity.mongo.DXYAreaEntityForMap;
 import com.wentao.ncov.entity.mongo.DXYNationalData;
 import com.wentao.ncov.service.MongoDBService;
 import lombok.extern.slf4j.Slf4j;
@@ -42,21 +43,21 @@ public class MongoDBServiceImpl implements MongoDBService {
      * Gods bless me,code never with bug.
      */
     @Override
-    public Map<String, DXYAreaEntity> getDataToday() {
+    public Map<String, DXYAreaEntityForMap> getDataTodayForProvince() {
         //2020221更新python值存储当日最新数据，因此此处查询mongoDB时去除循环条件
-        List<DXYAreaEntity> dxyAreaEntityList = new ArrayList<>();
+        List<DXYAreaEntityForMap> dxyAreaEntityList = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String date = sdf.format(new Date());
         Query query = new Query();
         Criteria criteria = Criteria.where("createTime").is(date);
         query.addCriteria(criteria);
         try {
-            dxyAreaEntityList = mongoTemplate.find(query, DXYAreaEntity.class);
+            dxyAreaEntityList = mongoTemplate.find(query, DXYAreaEntityForMap.class);
         } catch (Exception e) {
             log.error("get data size：" + dxyAreaEntityList.size() + " from mongoDB error,e=", e);
         }
-        Map<String, DXYAreaEntity> dxyAreaEntityMap = dxyAreaEntityList.stream().collect(
-                Collectors.toMap(DXYAreaEntity::getProvinceShortName, Function.identity(), (a, b) -> b));
+        Map<String, DXYAreaEntityForMap> dxyAreaEntityMap = dxyAreaEntityList.stream().collect(
+                Collectors.toMap(DXYAreaEntityForMap::getProvinceShortName, Function.identity(), (a, b) -> b));
         return dxyAreaEntityMap;
     }
 

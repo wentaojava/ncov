@@ -2,6 +2,7 @@ package com.wentao.ncov.service.impl;
 
 import com.wentao.ncov.bo.GetCityDataTodayByMongodbIdBO;
 import com.wentao.ncov.entity.mongo.DXYAreaEntity;
+import com.wentao.ncov.entity.mongo.DXYAreaEntityForMap;
 import com.wentao.ncov.entity.mongo.DXYNationalData;
 import com.wentao.ncov.entity.mysql.AreaData;
 import com.wentao.ncov.entity.mysql.ProvinceData;
@@ -13,6 +14,7 @@ import com.wentao.ncov.service.ViewDataService;
 import com.wentao.ncov.util.MapStructUtil;
 import com.wentao.ncov.util.response.RestResponse;
 import com.wentao.ncov.vo.GetCityDataTodayByMongodbIdVO;
+import com.wentao.ncov.vo.GetDataTodayForMapVO;
 import com.wentao.ncov.vo.GetDataTodayVO;
 import com.wentao.ncov.vo.GetProvinceVO;
 import lombok.extern.slf4j.Slf4j;
@@ -65,17 +67,18 @@ public class ViewDataServiceImpl implements ViewDataService {
      * Gods bless me,code never with bug.
      */
     @Override
-    public RestResponse<GetDataTodayVO> getDataToday() {
+    public RestResponse<GetDataTodayForMapVO> getDataTodayForProvince() {
         //查询中国省份
         List<ProvinceData> provinceData = provinceDataMapper.selectProvinceByCountry("中国");
-        Map<String, DXYAreaEntity> areaEntityMap = mongoDBService.getDataToday();
+        Map<String, DXYAreaEntityForMap> areaEntityMap = mongoDBService.getDataTodayForProvince();
         List<AreaData> areaDataList = new ArrayList<>();
         List<ProvinceData> provinceForNull = new ArrayList<>();
         //依次判断个省份数据是否齐全
         provinceData.forEach(province -> {
-            if (areaEntityMap.containsKey(province.getProvinceShortName())
-                    && null != areaEntityMap.get(province.getProvinceShortName())) {
-                AreaData areaData = MapStructUtil.INSTANCE.buildAreaData(areaEntityMap.get(province.getProvinceShortName()));
+            if (areaEntityMap.containsKey(province.getProvinceName())
+                    && null != areaEntityMap.get(province.getProvinceName())) {
+                AreaData areaData = MapStructUtil.INSTANCE.buildAreaData(areaEntityMap.get(province.getProvinceName()));
+                areaData.setProvinceShortName(province.getProvinceShortName());
                 areaDataList.add(areaData);
             } else {
                 provinceForNull.add(province);
@@ -89,13 +92,7 @@ public class ViewDataServiceImpl implements ViewDataService {
             }
         }
 
-
-        GetDataTodayVO getDataTodayVO = new GetDataTodayVO();
-        //从mongodb中查询统计数据
-        DXYNationalData nationalData = mongoDBService.getNationalDataToday();
-        if (null != nationalData) {
-            getDataTodayVO = MapStructUtil.INSTANCE.buildDXYNationalDataToGetDataTodayVO(nationalData);
-        }
+        GetDataTodayForMapVO getDataTodayVO = new GetDataTodayForMapVO();
         getDataTodayVO.setAreaDataList(areaDataList);
         return new RestResponse<>(getDataTodayVO);
     }
@@ -139,5 +136,25 @@ public class ViewDataServiceImpl implements ViewDataService {
             return new RestResponse<>(list);
         }
 
+    }
+
+    /**
+     * 获取当日确诊，疑似，治愈，死亡人数数据
+     *
+     * @return com.wentao.ncov.vo.GetProvinceVO
+     * @throws
+     * @author wentao
+     * @time 2020年02月13日
+     * Gods bless me,code never with bug.
+     */
+    @Override
+    public RestResponse<GetDataTodayVO> getDataToday() {
+        GetDataTodayVO getDataTodayVO = new GetDataTodayVO();
+        //从mongodb中查询统计数据
+        DXYNationalData nationalData = mongoDBService.getNationalDataToday();
+        if (null != nationalData) {
+            getDataTodayVO = MapStructUtil.INSTANCE.buildDXYNationalDataToGetDataTodayVO(nationalData);
+        }
+        return new RestResponse<>(getDataTodayVO);
     }
 }

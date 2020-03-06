@@ -1,6 +1,7 @@
 package com.wentao.ncov.service;
 
 import com.wentao.ncov.entity.mongo.DXYAreaEntity;
+import com.wentao.ncov.entity.mongo.DXYAreaEntityForMap;
 import com.wentao.ncov.entity.mongo.DXYNationalData;
 
 import java.util.Map;
@@ -23,7 +24,7 @@ public interface MongoDBService {
      * @time 2020年02月13日
      * Gods bless me,code never with bug.
      */
-    public Map<String, DXYAreaEntity> getDataToday();
+    public Map<String, DXYAreaEntityForMap> getDataTodayForProvince();
 
     /**
      * 根据id获取对应数据
