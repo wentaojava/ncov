@@ -1,4 +1,4 @@
-package com.wentao.ncov.vo;
+package com.wentao.ncov.entity.mongo;
 
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,9 +12,9 @@ import java.io.Serializable;
  */
 @Document("DXYArea")
 @Data
-public class GetProvinceVO implements Serializable {
-    private static final long serialVersionUID = -207841913285614795L;
+public class DXYAreaEntityForProvince implements Serializable {
 
+    private static final long serialVersionUID = 8228361647729742582L;
     /**
      * mongoDB中的主键Id
      */

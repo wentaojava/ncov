@@ -84,4 +84,11 @@
         cured_Count, cured_Count_Incr, dead_Count, dead_Count_Incr, create_Time
         from National_Data
     </select>
+
+    <select id="getDataByDate" resultType="com.wentao.ncov.vo.GetNationalDataByDateVO">
+         select confirmed_Count,suspected_Count, cured_Count,  dead_Count
+        from National_Data
+        where create_Time<![CDATA[ >= ]]>#{startDate} and create_Time<![CDATA[ <= ]]>#{endDate}
+
+    </select>
 </mapper>

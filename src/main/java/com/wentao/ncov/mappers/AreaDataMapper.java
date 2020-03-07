@@ -5,7 +5,6 @@ import com.wentao.ncov.entity.mysql.ProvinceData;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.Date;
 import java.util.List;
 
 @Mapper
@@ -49,7 +48,7 @@ public interface AreaDataMapper {
      * @time 2020年02月13日
      * Gods bless me,code never with bug.
      */
-    List<com.wentao.ncov.entity.mysql.AreaData> selectDataByUpdate(@Param("list") List<ProvinceData> provinceDataListForCheckDouble, @Param("date") Date time);
+    List<com.wentao.ncov.entity.mysql.AreaData> selectDataByUpdate(@Param("list") List<ProvinceData> provinceDataListForCheckDouble, @Param("date") String time);
 
     /**
      * 根据省份获取更新时间为最近的数据
@@ -62,4 +61,6 @@ public interface AreaDataMapper {
      * Gods bless me,code never with bug.
      */
     List<com.wentao.ncov.entity.mysql.AreaData> selectDataByProvince(@Param("list") List<ProvinceData> provinceForNull);
+
+    List<com.wentao.ncov.entity.mysql.AreaData> selectByUpdateTime(@Param("date") String startDate, @Param("country") String co);
 }

@@ -9,6 +9,7 @@ import com.wentao.ncov.entity.mysql.CityData;
 import com.wentao.ncov.entity.mysql.NationalData;
 import com.wentao.ncov.vo.GetCityDataTodayByMongodbIdVO;
 import com.wentao.ncov.vo.GetDataTodayVO;
+import com.wentao.ncov.vo.GetNationalDataByDateVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -24,6 +25,7 @@ public interface MapStructUtil {
 
 
     AreaData buildAreaData(DXYAreaEntityForMap dxyAreaEntity);
+
     AreaData buildAreaData(DXYAreaEntity dxyAreaEntity);
 
     @Mapping(target = "cityName", source = "city")
@@ -49,4 +51,6 @@ public interface MapStructUtil {
 
     @Mapping(target = "id", ignore = true)
     GetDataTodayVO buildDXYNationalDataToGetDataTodayVO(DXYNationalData dxyNationalData);
+
+    GetNationalDataByDateVO buildDXYNationalDataToGetNationalDataByDateVO(DXYNationalData nationalData);
 }

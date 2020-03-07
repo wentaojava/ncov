@@ -1,11 +1,9 @@
 package com.wentao.ncov.service;
 
 import com.wentao.ncov.bo.GetCityDataTodayByMongodbIdBO;
+import com.wentao.ncov.bo.GetNationalDataByDateBO;
 import com.wentao.ncov.util.response.RestResponse;
-import com.wentao.ncov.vo.GetCityDataTodayByMongodbIdVO;
-import com.wentao.ncov.vo.GetDataTodayForMapVO;
-import com.wentao.ncov.vo.GetDataTodayVO;
-import com.wentao.ncov.vo.GetProvinceVO;
+import com.wentao.ncov.vo.*;
 
 import java.util.List;
 
@@ -16,7 +14,7 @@ import java.util.List;
  */
 public interface ViewDataService {
     /**
-     * 获取省份信息
+     * 获取今日疫情中的省份信息
      *
      * @return java.util.List.com.wentao.ncov.vo.GetProvinceVO
      * @throws
@@ -59,4 +57,16 @@ public interface ViewDataService {
      * Gods bless me,code never with bug.
      */
     public RestResponse<GetDataTodayVO> getDataToday();
+
+    /**
+     * 根据开始，结束日期获取全国数据
+     *
+     * @param body
+     * @return GetNationalDataByDateVO
+     * @throws
+     * @author wentao
+     * @time 2020年03月07日
+     * Gods bless me,code never with bug.
+     */
+    public RestResponse<List<GetNationalDataByDateVO>> getNationalDataByDate(GetNationalDataByDateBO body);
 }

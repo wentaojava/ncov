@@ -3,7 +3,9 @@ package com.wentao.ncov.service;
 import com.wentao.ncov.entity.mongo.DXYAreaEntity;
 import com.wentao.ncov.entity.mongo.DXYAreaEntityForMap;
 import com.wentao.ncov.entity.mongo.DXYNationalData;
+import com.wentao.ncov.vo.GetProvinceVO;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,4 +51,16 @@ public interface MongoDBService {
      * Gods bless me,code never with bug.
      */
     public DXYNationalData getNationalDataToday();
+
+    /**
+     * 获取今日疫情中的省份信息
+     *
+     * @param
+     * @return GetProvinceVO
+     * @throwsa
+     * @autho wentao
+     * @time 2020年03月07日
+     * Gods bless me,code never with bug.
+     */
+    public List<GetProvinceVO> getTodayProvince();
 }

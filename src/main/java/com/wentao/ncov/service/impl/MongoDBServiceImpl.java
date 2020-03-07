@@ -5,6 +5,7 @@ import com.wentao.ncov.entity.mongo.DXYAreaEntity;
 import com.wentao.ncov.entity.mongo.DXYAreaEntityForMap;
 import com.wentao.ncov.entity.mongo.DXYNationalData;
 import com.wentao.ncov.service.MongoDBService;
+import com.wentao.ncov.vo.GetProvinceVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -110,5 +111,31 @@ public class MongoDBServiceImpl implements MongoDBService {
             log.error("get data for (date=" + date + ") from mongoDB error,e=", e);
         }
         return dxyNationalData;
+    }
+
+    /**
+     * 获取今日疫情中的省份信息
+     *
+     * @param
+     * @return GetProvinceVO
+     * @throwsa
+     * @autho wentao
+     * @time 2020年03月07日
+     * Gods bless me,code never with bug.
+     */
+    @Override
+    public List<GetProvinceVO> getTodayProvince() {
+        List<GetProvinceVO> dxyAreaEntityList = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String date = sdf.format(new Date());
+        Query query = new Query();
+        Criteria criteria = Criteria.where("createTime").is(date);
+        query.addCriteria(criteria);
+        try {
+            dxyAreaEntityList = mongoTemplate.find(query, GetProvinceVO.class);
+        } catch (Exception e) {
+            log.error("get data size：" + dxyAreaEntityList.size() + " from mongoDB error,e=", e);
+        }
+        return dxyAreaEntityList;
     }
 }

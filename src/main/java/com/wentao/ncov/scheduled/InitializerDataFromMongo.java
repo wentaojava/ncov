@@ -83,6 +83,24 @@ public class InitializerDataFromMongo {
         Query query = new Query();
         Criteria criteria = Criteria.where("createTime").is(date);
         query.addCriteria(criteria);
+        //存储前一日全国疫情数据
+        DXYNationalData dxyNationalData = null;
+        try {
+            dxyNationalData = mongoTemplate.findOne(query, DXYNationalData.class);
+        } catch (Exception e) {
+            log.error("get national data from mongo failed,exception=", e);
+            log.info("get data from mongo end with exception");
+        }
+
+        if (null != dxyNationalData) {
+            //转换mysql对象
+            NationalData nationalData = MapStructUtil.INSTANCE.buildDXYNationalData(dxyNationalData);
+            nationalData.setCreateTime(c.getTime());
+            nationalDataMapper.insert(nationalData);
+            log.info("save national data  for Yesterday to mysql end");
+        }
+
+        //获取前一日省份疫情数据
         try {
             dxyAreaEntityList = mongoTemplate.find(query, DXYAreaEntity.class);
         } catch (Exception e) {
@@ -126,6 +144,7 @@ public class InitializerDataFromMongo {
         }
 
 
+
         try {
             //存入省份疫情数据
             Integer resultCount = areaDataMapper.insertAll(areaDataList);
@@ -157,13 +176,13 @@ public class InitializerDataFromMongo {
             //全省份都有数据更新，后续动作结束
             log.info("get data from mongo end,date=" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
             return;
-
         }
+
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(c.getTime());
         calendar.add(Calendar.DAY_OF_MONTH, -1);
         //获取前一日省份数据
-        List<AreaData> areaDataListForYesterday = areaDataMapper.selectDataByUpdate(provinceDataListForCheckDouble, calendar.getTime());
+        List<AreaData> areaDataListForYesterday = areaDataMapper.selectDataByUpdate(provinceDataListForCheckDouble, sdf.format(calendar.getTime()));
         List<CityData> cityDataForYesterday = new ArrayList<>();
         //前一日数据也为空，则代表爬虫未获取到,那就全部初始化为0吧
         if (CollectionUtils.isEmpty(areaDataListForYesterday)) {
@@ -199,22 +218,6 @@ public class InitializerDataFromMongo {
             throw new RuntimeException();
         }
 
-        //存储前一日全国疫情数据
-        DXYNationalData dxyNationalData = null;
-        try {
-            dxyNationalData = mongoTemplate.findOne(query, DXYNationalData.class);
-        } catch (Exception e) {
-            log.error("get national data from mongo failed,exception=", e);
-            log.info("get data from mongo end with exception");
-            return;
-        }
-        if (null != dxyNationalData) {
-            //转换mysql对象
-            NationalData nationalData = MapStructUtil.INSTANCE.buildDXYNationalData(dxyNationalData);
-            nationalData.setCreateTime(c.getTime());
-            nationalDataMapper.insert(nationalData);
-            log.info("save national data  for Yesterday to mysql end");
-        }
         log.info("get data from mongo end,date=" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
     }
 

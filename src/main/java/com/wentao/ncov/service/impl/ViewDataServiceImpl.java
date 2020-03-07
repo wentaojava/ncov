@@ -1,6 +1,7 @@
 package com.wentao.ncov.service.impl;
 
 import com.wentao.ncov.bo.GetCityDataTodayByMongodbIdBO;
+import com.wentao.ncov.bo.GetNationalDataByDateBO;
 import com.wentao.ncov.entity.mongo.DXYAreaEntity;
 import com.wentao.ncov.entity.mongo.DXYAreaEntityForMap;
 import com.wentao.ncov.entity.mongo.DXYNationalData;
@@ -8,24 +9,21 @@ import com.wentao.ncov.entity.mysql.AreaData;
 import com.wentao.ncov.entity.mysql.ProvinceData;
 import com.wentao.ncov.exceptionhandler.SystemErrorCode;
 import com.wentao.ncov.mappers.AreaDataMapper;
+import com.wentao.ncov.mappers.NationalDataMapper;
 import com.wentao.ncov.mappers.ProvinceDataMapper;
 import com.wentao.ncov.service.MongoDBService;
 import com.wentao.ncov.service.ViewDataService;
+import com.wentao.ncov.util.DateUtil;
 import com.wentao.ncov.util.MapStructUtil;
 import com.wentao.ncov.util.response.RestResponse;
-import com.wentao.ncov.vo.GetCityDataTodayByMongodbIdVO;
-import com.wentao.ncov.vo.GetDataTodayForMapVO;
-import com.wentao.ncov.vo.GetDataTodayVO;
-import com.wentao.ncov.vo.GetProvinceVO;
+import com.wentao.ncov.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author wentao
@@ -41,9 +39,11 @@ public class ViewDataServiceImpl implements ViewDataService {
     private MongoDBService mongoDBService;
     @Resource
     private AreaDataMapper areaDataMapper;
+    @Resource
+    private NationalDataMapper nationalDataMapper;
 
     /**
-     * 获取省份信息
+     * 获取今日疫情中的省份信息
      *
      * @return java.util.List.com.wentao.ncov.vo.GetProvinceVO
      * @throws
@@ -53,7 +53,7 @@ public class ViewDataServiceImpl implements ViewDataService {
      */
     @Override
     public RestResponse<List<GetProvinceVO>> getProvince() {
-        List<GetProvinceVO> list = provinceDataMapper.selectAllForGetProvince();
+        List<GetProvinceVO> list = mongoDBService.getTodayProvince();
         return new RestResponse<>(list);
     }
 
@@ -156,5 +156,40 @@ public class ViewDataServiceImpl implements ViewDataService {
             getDataTodayVO = MapStructUtil.INSTANCE.buildDXYNationalDataToGetDataTodayVO(nationalData);
         }
         return new RestResponse<>(getDataTodayVO);
+    }
+
+    /**
+     * 根据开始，结束日期获取全国数据
+     *
+     * @param bo
+     * @return GetNationalDataByDateVO
+     * @throws
+     * @author wentao
+     * @time 2020年03月07日
+     * Gods bless me,code never with bug.
+     */
+    @Override
+    public RestResponse<List<GetNationalDataByDateVO>> getNationalDataByDate(GetNationalDataByDateBO bo) {
+        Date startDate = DateUtil.ignoreDateTime(bo.getStartDate());
+        Date endDate = DateUtil.ignoreDateTime(bo.getEndDate());
+        Date today = DateUtil.ignoreDateTime(new Date());
+        bo.setStartDate(startDate);
+        bo.setEndDate(endDate);
+        //判断结束日期是否为当天
+        List<GetNationalDataByDateVO> list = new ArrayList<>();
+        DXYNationalData nationalData = new DXYNationalData();
+        if (endDate.equals(today)) {
+            nationalData = mongoDBService.getNationalDataToday();
+            GetNationalDataByDateVO vo = MapStructUtil.INSTANCE.buildDXYNationalDataToGetNationalDataByDateVO(nationalData);
+            list.add(vo);
+            Calendar c = Calendar.getInstance();
+            c.setTime(today);
+            c.add(Calendar.DAY_OF_MONTH, -1);
+            bo.setEndDate(c.getTime());
+        }
+        //根据日期区间获取数据
+        List<GetNationalDataByDateVO> list1 = nationalDataMapper.getDataByDate(bo);
+        list.addAll(list1);
+        return new RestResponse<>(list);
     }
 }
