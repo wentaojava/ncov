@@ -13,7 +13,6 @@ import com.wentao.ncov.mappers.NationalDataMapper;
 import com.wentao.ncov.mappers.ProvinceDataMapper;
 import com.wentao.ncov.util.MapStructUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -157,7 +156,7 @@ public class InitializerDataFromMongo {
             throw new RuntimeException();
         }
 
-        //检查前一日是否有数据更新，如果没有则取出上一天的数据再次存储为当天数据;
+       /* //检查前一日是否有数据更新，如果没有则取出上一天的数据再次存储为当天数据;
         //2020/03/03 更新：去除非中国数据的存储
 
         //根据省份信息判断
@@ -216,7 +215,7 @@ public class InitializerDataFromMongo {
         } catch (Exception e) {
             log.error("save area or city for Yesterday data to mysql error,e=", e);
             throw new RuntimeException();
-        }
+        }*/
 
         log.info("get data from mongo end,date=" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
     }
